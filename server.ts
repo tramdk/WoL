@@ -1,12 +1,11 @@
 import express from 'express';
-import { createServer as createViteServer } from 'vite';
 import wol from 'wake_on_lan';
 import path from 'path';
 import cors from 'cors';
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3000;
 
   app.use(express.json());
   app.use(cors());
@@ -32,6 +31,7 @@ async function startServer() {
 
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
