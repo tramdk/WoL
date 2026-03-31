@@ -2,6 +2,7 @@ import express from 'express';
 import wol from 'wake_on_lan';
 import path from 'path';
 import cors from 'cors';
+import fs from 'fs';
 
 async function startServer() {
   const app = express();
@@ -37,6 +38,20 @@ async function startServer() {
       appType: 'spa',
     });
     app.use(vite.middlewares);
+    
+    // Explicitly serve index.html in dev mode to ensure it's transformed by Vite
+    app.get('*', async (req, res, next) => {
+      try {
+        const url = req.originalUrl;
+        let template = fs.readFileSync(path.resolve(process.cwd(), 'index.html'), 'utf-8');
+        template = await vite.transformIndexHtml(url, template);
+        res.status(200).set({ 'Content-Type': 'text/html' }).end(template);
+      } catch (e: any) {
+        vite.ssrFixStacktrace(e);
+        console.error(e.stack);
+        res.status(500).end(e.stack);
+      }
+    });
   } else {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
