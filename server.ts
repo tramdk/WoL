@@ -2,12 +2,14 @@ import express from 'express';
 import { createServer as createViteServer } from 'vite';
 import wol from 'wake_on_lan';
 import path from 'path';
+import cors from 'cors';
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
   app.use(express.json());
+  app.use(cors());
 
   app.post('/api/wake', (req, res) => {
     const { mac, address } = req.body;

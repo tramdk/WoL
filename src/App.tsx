@@ -53,10 +53,12 @@ export default function App() {
     setDevices(devices.filter(d => d.id !== id));
   };
 
+  const API_BASE = 'https://wol-ufp4.onrender.com';
+
   const handleWake = async (device: Device) => {
     setWakingId(device.id);
     try {
-      const res = await fetch('/api/wake', {
+      const res = await fetch(`${API_BASE}/api/wake`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mac: device.mac, address: device.address })
