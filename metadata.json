@@ -1,0 +1,5 @@
+{
+  "name": "Wake-on-LAN Dashboard",
+  "description": "A web application to wake up computers remotely via Wake-on-LAN magic packets.",
+  "requestFramePermissions": []
+}
